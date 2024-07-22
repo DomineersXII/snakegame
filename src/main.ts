@@ -3,11 +3,11 @@ const canvasContext = canvas.getContext("2d")!
 const CELL_SIZE = 25
 const snake = {
     size: CELL_SIZE-2,
-    x: canvas.width/2/CELL_SIZE * CELL_SIZE - CELL_SIZE,
-    y: canvas.height/2/CELL_SIZE * CELL_SIZE - CELL_SIZE,
+    x: canvas.width/2 - CELL_SIZE,
+    y: canvas.height/2 - CELL_SIZE,
     length: 1,
 }
-const snakeHistory = [] //tracks old positions of snake.
+const snakeHistory: [number, number][] = [] //tracks old positions of snake.
 const apple = {
     size: CELL_SIZE-2,
     x: getRandomPosition()[0],
@@ -25,14 +25,14 @@ function getRandomPosition() {
 function endGame() {
     clearInterval(connection) //disconnect the game loop
     alert("Game over, press OK to restart.")
-    snake.x = canvas.width/2/CELL_SIZE * CELL_SIZE - CELL_SIZE
-    snake.y = canvas.height/2/CELL_SIZE * CELL_SIZE - CELL_SIZE
+    snake.x = canvas.width/2 - CELL_SIZE
+    snake.y = canvas.height/2 - CELL_SIZE
     snake.length = 1
     moveDirection = "right"
     snakeHistory.length = 0 
 
     render()
-    connection = setInterval(moveSnake, 250) //reconnect the game loop
+    connection = setInterval(moveSnake, 200) //reconnect the game loop
 }
 
 function eatApple() {
@@ -70,9 +70,8 @@ function moveSnake() {
             break
         }
     }
-    render()
 
-    
+    render()
 }
 
 function render() {
@@ -114,16 +113,24 @@ function render() {
 window.addEventListener("keydown", (event) => {
     switch (event.key) {
         case "ArrowUp":
-            moveDirection = "up"
+            if (moveDirection != "down") {
+                moveDirection = "up"
+            }
             break
         case "ArrowDown":
-            moveDirection = "down"
+            if (moveDirection != "up") {
+                moveDirection = "down"
+            }
             break
         case "ArrowLeft":
-            moveDirection = "left"
+            if (moveDirection != "right") {
+                moveDirection = "left"
+            }
             break
         case "ArrowRight":
-            moveDirection = "right"
+            if (moveDirection != "left") {
+                moveDirection = "right"
+            }
             break
         default:
             break
